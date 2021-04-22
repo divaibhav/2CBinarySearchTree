@@ -161,13 +161,62 @@ public class MyBinarySearchTree<E extends Comparable<E>> {
                     }
                 }
             }
-                //root node
-            //case 3- tow children
-                //root node
+            //right child
+            else if(hasRightChild(temp)){
+                //root
+                if(parent == null){
+                    root = root.getRight();
+                }
+                else{
+                    if (deletingElement.compareTo(temp.getData()) < 0){
+                        parent.setLeft(temp.getRight());
+                    }
+                    else{
+                        parent.setRight(temp.getRight());
+                    }
+                }
+            }
+            //case 3- two children
+            else{
+                //get the successor
+                Node<E> successor = getSuccessor(temp);
+                delete(successor.getData());
+                successor.setLeft(temp.getLeft());
+                successor.setRight(temp.getRight());
+                //root
+                if(parent == null){
+                    root = successor;
+                }
+                else{
+                    if (deletingElement.compareTo(temp.getData()) < 0 ){
+                        parent.setLeft(successor);
+                    }
+                    else {
+                        parent.setRight(successor);
+                    }
+                }
+            }
+
+
         }
         else{
             throw new NoSuchElementException("element not present");
         }
+    }
+
+    private Node<E> getSuccessor(Node<E> temp) {
+        Node<E> successor = temp.getRight();
+        while (successor.getLeft() != null){
+            successor = successor.getLeft();
+        }
+        return successor;
+    }
+
+    private boolean hasRightChild(Node<E> temp) {
+        if(temp.getRight() != null && temp.getLeft() == null){
+            return true;
+        }
+        return false;
     }
 
     private boolean hasLeftChild(Node<E> temp) {
@@ -186,5 +235,13 @@ public class MyBinarySearchTree<E extends Comparable<E>> {
 
     private int compare(E deletingElement, Node<E> temp) {
         return deletingElement.compareTo(temp.getData());
+    }
+    public int height(Node<E> node){
+        if(node == null){
+            return  -1;
+        }
+        else{
+            return  1 + Math.max(height(node.getLeft()), height(node.getRight()));
+        }
     }
 }
